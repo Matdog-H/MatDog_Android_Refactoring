@@ -8,6 +8,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.Card
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
@@ -32,18 +35,27 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainView() {
+    val scrollState = rememberScrollState()
+
+    // Smooth scroll to specified pixels on first composition
+    LaunchedEffect(Unit) { scrollState.animateScrollTo(10000) }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally) {
             Text("MatDog", style = TextStyle(fontSize = 30.sp))
-            
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(10.dp)
-                .background(Color.LightGray))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(10.dp)
+                    .background(Color.LightGray)
+            )
 
             MainColumnItem(name = "내가 본 공고")
             MainColumnItem(name = "강아지를 찾고있어요")
@@ -53,30 +65,36 @@ fun MainView() {
 }
 
 @Composable
-fun MainColumnItem(name : String){
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(10.dp)) {
+fun MainColumnItem(name: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
         Text(name, style = TextStyle(fontSize = 20.sp))
         Box(modifier = Modifier.weight(1f))
         Text("더보기")
     }
 
-    LazyRow(){
+    LazyRow() {
         items(10) {
             Card(id = it)
         }
     }
+    
+    Box(modifier = Modifier.height(50.dp))
 }
 
 @Composable
-fun Card(id:Int){
-    Card(modifier = Modifier
-        .padding(5.dp)
-        .border(width = 3.dp, color = Color.Black)
-        .height(160.dp)
-        .width(110.dp)) {
-        Box(contentAlignment = Alignment.Center){
+fun Card(id: Int) {
+    Card(
+        modifier = Modifier
+            .padding(5.dp)
+            .border(width = 3.dp, color = Color.Black)
+            .height(160.dp)
+            .width(110.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
             Text(id.toString())
         }
     }
