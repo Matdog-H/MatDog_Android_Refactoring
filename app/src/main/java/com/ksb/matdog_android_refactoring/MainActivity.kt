@@ -1,6 +1,7 @@
 package com.ksb.matdog_android_refactoring
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -9,18 +10,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.Card
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
@@ -40,9 +42,22 @@ fun MainView() {
     // Smooth scroll to specified pixels on first composition
     LaunchedEffect(Unit) { scrollState.animateScrollTo(10000) }
 
-    Surface(
+
+    val scaffoldState = rememberScaffoldState()
+
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
+        bottomBar = { MyBottomBar() },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                // FAB onClick
+            }) {
+                Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
+            }
+        },
+        scaffoldState = scaffoldState,
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center
     ) {
         Column(modifier = Modifier
             .fillMaxSize()
@@ -97,6 +112,50 @@ fun Card(id: Int) {
         Box(contentAlignment = Alignment.Center) {
             Text(id.toString())
         }
+    }
+}
+
+@Composable
+fun MyBottomBar() {
+    val bottomMenuItemsList = prepareBottomMenu()
+    val contextForToast = LocalContext.current.applicationContext
+    var selectedItem by remember {
+        mutableStateOf("Home")
+    }
+
+    BottomAppBar(
+        cutoutShape = CircleShape
+    ) {
+
+        bottomMenuItemsList.forEachIndexed { index, menuItem ->
+            if (index == 1) {
+                BottomNavigationItem(
+                    selected = false,
+                    onClick = {},
+                    icon = {},
+                    enabled = false
+                )
+            }
+
+            BottomNavigationItem(
+                selected = (selectedItem == menuItem.label),
+                onClick = {
+                    selectedItem = menuItem.label
+                    Toast.makeText(
+                        contextForToast,
+                        menuItem.label, Toast.LENGTH_SHORT
+                    ).show()
+                },
+                icon = {
+                    Icon(
+                        imageVector = menuItem.icon,
+                        contentDescription = menuItem.label
+                    )
+                },
+                enabled = true
+            )
+        }
+
     }
 }
 
