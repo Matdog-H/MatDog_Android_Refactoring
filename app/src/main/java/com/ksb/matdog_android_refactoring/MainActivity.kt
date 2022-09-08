@@ -1,5 +1,6 @@
 package com.ksb.matdog_android_refactoring
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -14,8 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +41,7 @@ fun MainView() {
     val scrollState = rememberScrollState()
 
     // Smooth scroll to specified pixels on first composition
-    LaunchedEffect(Unit) { scrollState.animateScrollTo(10000) }
+//    LaunchedEffect(Unit) { scrollState.animateScrollTo(10000) }
 
 
     val scaffoldState = rememberScaffoldState()
@@ -62,19 +63,26 @@ fun MainView() {
         Column(modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("MatDog", style = TextStyle(fontSize = 30.sp))
+            Text("MatDog", style = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.ExtraBold), modifier = Modifier.padding(15.dp))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .padding(10.dp)
-                    .background(Color.LightGray)
-            )
+                    .background(Color.White)
+            ){
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "CAMERA"
+                )
+            }
 
             MainColumnItem(name = "내가 본 공고")
             MainColumnItem(name = "강아지를 찾고있어요")
             MainColumnItem(name = "주인을 찾아주세요")
+            Box(modifier = Modifier.height(50.dp))
         }
     }
 }
@@ -109,9 +117,15 @@ fun Card(id: Int) {
             .height(160.dp)
             .width(110.dp)
     ) {
-        Box(contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth()
+                .padding(5.dp)
+                .background(Color.DarkGray))
             Text(id.toString())
         }
+
     }
 }
 
