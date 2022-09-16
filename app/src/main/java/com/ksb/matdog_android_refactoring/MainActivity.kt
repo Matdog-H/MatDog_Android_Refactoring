@@ -1,6 +1,5 @@
 package com.ksb.matdog_android_refactoring
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -8,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -31,13 +29,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainView()
+            MainScreen { navController.navigate("friendsList") }
         }
     }
 }
 
 @Composable
-fun MainView() {
+fun MainScreen(onNavigateToFriends: () -> Unit) {
     val scrollState = rememberScrollState()
 
     // Smooth scroll to specified pixels on first composition
@@ -78,7 +76,6 @@ fun MainView() {
                     contentDescription = "CAMERA"
                 )
             }
-
             MainColumnItem(name = "내가 본 공고")
             MainColumnItem(name = "강아지를 찾고있어요")
             MainColumnItem(name = "주인을 찾아주세요")
@@ -176,5 +173,5 @@ fun MyBottomBar() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MainView()
+    MainScreen { navController.navigate("friendsList") }
 }
